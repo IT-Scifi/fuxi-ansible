@@ -3,6 +3,7 @@
 # First version of local.yml.  Good just for testing, hopefully.
 
 ---
+
 - hosts: pull_mode_hosts
   remote_user: root
 
@@ -10,5 +11,5 @@
   touchfile: /etc/ansibletest
 
 - name: Touching the test file
-  file: path={{ touchfile }} state=file owner=root group=root mode=0644
-  
+  file: path={{ touchfile }} state=touch owner=root group=root mode=0644
+
