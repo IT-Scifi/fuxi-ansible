@@ -7,9 +7,11 @@
 - hosts: pull_mode_hosts
   remote_user: root
 
-- vars:
-  touchfile: /etc/ansibletest
+  vars:
+    touchfile: /etc/ansibletest
 
-- name: Touching the test file
-  file: path={{ touchfile }} state=touch owner=root group=root mode=0644
+  tasks:
+
+  - name: Touching the test file
+    file: path={{ touchfile }} state=touch owner=root group=root mode=0644
 
