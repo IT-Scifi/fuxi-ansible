@@ -1,0 +1,140 @@
+#!/bin/bash
+# This file is created with ansible-role-fgci-install on the install node
+#
+# It is a script to run ansible-pull on an FGCI compute node
+# It is first grabbed with curl during kickstart
+# It's initially set to execute every 15 minutes
+# Local.yml itself changes cron interval after execution.
+
+# writes to syslog and stderr with tag ansible-pull
+loggercmd="/usr/bin/logger -s -t ansible-pull"
+export http_proxy="http://{{ int_gateway }}:3128"
+export https_proxy=$http_proxy
+export no_proxy="localhost,{{ pull_install_ip }},raw.githubusercontent.com"
+time=$[ ( $RANDOM % {{ ansible_pull_sleep }} )  + 1 ]
+lockdir="/var/lock/ansible-pull"
+WORKDIR="workdir"
+FULL_WORKDIR="/root/.ansible/pull/workdir"
+# Make ansible not print skipped hosts
+export DISPLAY_SKIPPED_HOSTS=0
+
+# Command line option handling. Only -n (= no sleep, useful for
+# interactive use) is supported so far.
+while getopts ":n" opt; do
+    case $opt in
+	n)
+            time=0
+	    ;;
+	\?)
+	    echo "Invalid option: -$OPTARG" >&2
+	    ;;
+    esac
+done
+
+
+# Setup the ansible-pull fgci work dir
+mkdir -p $FULL_WORKDIR
+cd $FULL_WORKDIR
+
+## One ansible-pull at a time
+if ! mkdir "$lockdir"; then
+        $loggercmd "cannot acquire lock, giving up on $lockdir"
+        exit 1
+fi
+##
+
+# Setup the cleanup trap
+sleep_pid=
+
+function cleanup {
+    [[ $sleep_pid ]] && disown $sleep_pid && kill $sleep_pid
+    rmdir $lockdir
+}
+
+trap cleanup EXIT
+
+
+# Bring Up Ib0 if config file exists and is down
+if [ -f /etc/sysconfig/network-scripts/ifcfg-ib0 ] && grep -q "down" /sys/class/net/ib0/operstate
+then
+	/usr/sbin/ifup ib0
+fi
+
+# Sleep a bit
+$loggercmd "Sleeping for ${time}s until $(date -d @$(($(date +%s) + $time)))"
+# The sleep &, wait is to have the sleep interruptible so that the
+# cleanup handler runs if the script is exited during the sleep
+/bin/sleep "$time"s & sleep_pid=$!
+wait
+sleep_pid=
+
+start_time="$(date +%s)"
+
+#if $FULL_WORKDIR/.git does not exist we need to do a git clone ourselves.
+#ansible-pull / git can't do this with a non-empty directory, which we have because we need to wget mirror in the group_vars from each cluster's install node before we run ansible-pull.
+if [ ! -d "$FULL_WORKDIR/.git" ]; then
+    	/usr/bin/git clone http://{{ pull_install_ip }}:8080/github.com/CSC-IT-Center-for-Science/fgci-ansible.git $FULL_WORKDIR
+	if [ "$?" != 0 ]; then
+        	$loggercmd "error: with 'git clone http://{{ pull_install_ip }}:8080/github.com/CSC-IT-Center-for-Science/fgci-ansible.git $FULL_WORKDIR' PWD=$PWD rc=$?"
+	fi
+else
+	/usr/bin/git pull		
+	if [ "$?" != 0 ]; then		
+        	$loggercmd "error: git pull in PWD=$PWD rc=$?"		
+	fi
+fi
+
+# Mirror in the group_vars - they are copied to install node's www with the fgci-install tag and role for install node.
+# Wget assumes we are in $HOME/.ansible/pull/$WORKDIR when running
+/usr/bin/wget --no-host-directories --mirror --accept=example,yml,fgci-default-packages http://{{ pull_install_ip }}/group_vars
+
+# Mirror the host_vars tree
+/usr/bin/wget --no-host-directories --no-parent --mirror http://{{ pull_install_ip }}/host_vars
+
+# Install all the ansible role dependencies
+/usr/bin/curl -f -O http://{{ pull_install_ip }}/requirements_mirror.yml
+if [ "$?" != 0 ]; then
+        $loggercmd "error: curling http://{{ pull_install_ip }}/requirements_mirror.yml rc=$?"
+fi
+/usr/bin/ansible-galaxy install -r requirements_mirror.yml -f -i
+if [ "$?" != 0 ]; then
+        $loggercmd "error: installing ansible requirements rc=$?"
+fi
+
+# Get the ansible hosts file 
+/usr/bin/curl -f -o /root/hosts http://{{ pull_install_ip }}/hosts
+if [ "$?" != 0 ]; then
+        $loggercmd "error: curling http://{{ pull_install_ip }}/hosts rc=$?"
+fi
+
+# run the fgci-ansible/local.yml playbook, master/devel branch and /root/hosts inventory file
+/usr/bin/ansible-pull -U http://{{ pull_install_ip }}:8080/github.com/CSC-IT-Center-for-Science/fgci-ansible.git -C {{ ansible_pull_branch }} -i /root/hosts -d $FULL_WORKDIR --full
+pull_exit=$?
+$loggercmd "info: ansible-pull -U http://{{ pull_install_ip }}:8080/github.com/CSC-IT-Center-for-Science/fgci-ansible.git -C {{ ansible_pull_branch }} -i /root/hosts -d $FULL_WORKDIR --full exited with rc=$pull_exit"
+end_time="$(date +%s)"
+diff_time="$(($end_time - $start_time))"
+
+{% if ansible_pull_grafana_annotation is defined %}
+{% if ansible_pull_grafana_annotation == true %}
+# Send a notification to cassini.fgci.csc.fi
+if [ "$pull_exit" == 0 ]; then
+  /bin/bash $FULL_WORKDIR/tools/grafana_ansible_pull.sh succeeded $diff_time
+  # The presence of this file indicates that ansible-pull has at least once succeeded on this node.
+  if [ ! -f "/etc/FGCI" ]; then
+    echo "$0 succeeded at: $(date)" >> /etc/FGCI
+  fi
+else
+  /bin/bash $FULL_WORKDIR/tools/grafana_ansible_pull.sh failed $diff_time
+fi
+{% endif %}
+{% endif %}
+
+# Grab the latest ansible-pull-script.sh
+/usr/bin/curl -f -o /usr/local/bin/ansible-pull-script.sh.new http://{{ pull_install_ip }}/ansible-pull-script.sh
+if [ "$?" != 0 ]; then
+    $loggercmd "error: curl -f -o /usr/local/bin/ansible-pull-script.sh.new http://{{ pull_install_ip }}/ansible-pull-script.sh failed with rc=$?"
+else
+    chmod 0750 /usr/local/bin/ansible-pull-script.sh.new
+    mv /usr/local/bin/ansible-pull-script.sh.new /usr/local/bin/ansible-pull-script.sh
+fi
+
