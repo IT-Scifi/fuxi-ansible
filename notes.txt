@@ -1,0 +1,8 @@
+Mixed notes
+===========
+
+
+ansible-galaxy example:  firewall role was initialized as
+
+  ansible-galaxy init -p roles firewall
+

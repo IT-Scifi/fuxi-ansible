@@ -10,8 +10,9 @@
   vars:
     touchfile: /etc/ansibletest
 
-  tasks:
-
+  pre_tasks:
   - name: Touching the test file
     file: path={{ touchfile }} state=touch owner=root group=root mode=0644
 
+  roles:
+  - role: firewall
