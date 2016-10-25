@@ -3,12 +3,12 @@
 
 - name: install apt packages
   apt: pkg=ufw update_cache=yes cache_valid_time=3600
-  sudo: True
+  become: True
 
 - name: allow ssh
   ufw: rule=allow port=ssh proto=tcp
-  sudo: True
+  become: True
 
 - name: enable ufw and configure the default policy
   ufw: state=enabled policy=deny
-  sudo: True
+  become: True
