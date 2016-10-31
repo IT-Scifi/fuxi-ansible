@@ -1,0 +1,10 @@
+---
+# tasks file for networking
+
+- name: NetworkManager config
+  ini_file: >
+    dest={{ nm_config_file }}
+    section=main
+    option=monitor-connection-files
+    value=true
+  notify: restart NetworkManager
