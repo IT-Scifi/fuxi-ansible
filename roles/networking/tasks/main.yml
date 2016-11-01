@@ -10,7 +10,7 @@
   become: True
   notify: restart NetworkManager
 
-# tasks file for firewall
+# Firewall config
 
 - name: install apt packages
   apt: pkg=ufw update_cache=yes cache_valid_time=3600
