@@ -1,8 +1,8 @@
 Networking
 ==========
 
-Network related config, besides firewall (there is separate role for
-firewall configs).
+Network related config.  The task enables ufw firewall, sets default
+policy and allows for ssh, and configures the NetworkManager.
 
 Requirements
 ------------

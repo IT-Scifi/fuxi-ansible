@@ -15,5 +15,4 @@
     file: path={{ touchfile }} state=touch owner=root group=root mode=0644
 
   roles:
-  - role: firewall
   - role: networking
