@@ -1,6 +1,6 @@
 #!/usr/bin/env ansible-playbook
 
-# First version of local.yml.  Good just for testing, hopefully.
+# local.yml is played by ansible-pull after each pull.
 
 ---
 
@@ -8,11 +8,12 @@
   remote_user: root
 
   vars:
-    touchfile: /etc/ansibletest
+    bookkeepingdir: /var/lib/ansible/bookkeeping
 
   pre_tasks:
-  - name: Touching the test file
-    file: path={{ touchfile }} state=touch owner=root group=root mode=0644
+  - name: Creating the bookkeeping dir
+    file: path={{ bookkeepingdir }} state=directory owner=root group=root mode=0755
 
   roles:
   - role: networking
+  - role: printing

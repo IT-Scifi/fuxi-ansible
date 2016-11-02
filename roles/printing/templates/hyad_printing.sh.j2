@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PPDFILE={{ adprint_ppd_file }}
+ACCOUNTINGFILE={{ adprint_touch_file }}
+
+lpadmin -p hopeakuusi1-sc-ps    -v smb://hopeakuusi1.ad.helsinki.fi/smartcard-ps    -D "SC-PS (UH hopeakuusi1)"    -L "Kumpula, Meilahti" -P $PPDFILE -E -o printer-is-shared=false
+lpadmin -p valkokuusi1-sc-ps    -v smb://valkokuusi1.ad.helsinki.fi/smartcard-ps    -D "SC-PS (UH valkokuusi1)"    -L "Meilahti, Kumpula" -P $PPDFILE -E -o printer-is-shared=false
+lpadmin -p mustakuusi1-sc-ps    -v smb://mustakuusi1.ad.helsinki.fi/smartcard-ps    -D "SC-PS (UH mustakuusi1)"    -L "Viikki"            -P $PPDFILE -E -o printer-is-shared=false
+lpadmin -p mustakuusi2-sc-ps    -v smb://mustakuusi2.ad.helsinki.fi/smartcard-ps    -D "SC-PS (UH mustakuusi2)"    -L "Viikki"            -P $PPDFILE -E -o printer-is-shared=false
+lpadmin -p punakuusi1-sc-ps     -v smb://punakuusi1.ad.helsinki.fi/smartcard-ps     -D "SC-PS (UH punakuusi1)"     -L "City centre"       -P $PPDFILE -E -o printer-is-shared=false
+lpadmin -p punakuusi2-sc-ps     -v smb://punakuusi2.ad.helsinki.fi/smartcard-ps     -D "SC-PS (UH punakuusi2)"     -L "City centre"       -P $PPDFILE -E -o printer-is-shared=false
+lpadmin -p punakuusi3-sc-ps     -v smb://punakuusi3.ad.helsinki.fi/smartcard-ps     -D "SC-PS (UH punakuusi3)"     -L "City centre"       -P $PPDFILE -E -o printer-is-shared=false
+lpadmin -p siperiankuusi1-sc-ps -v smb://siperiankuusi1.ad.helsinki.fi/smartcard-ps -D "SC-PS (UH siperiankuusi1)" -L "Other locations"   -P $PPDFILE -E -o printer-is-shared=false
+
+# Marking done
+touch $ACCOUNTING_FILE
