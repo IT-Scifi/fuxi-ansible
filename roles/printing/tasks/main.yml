@@ -1,9 +1,12 @@
 ---
 # tasks file for printing
 
-- name: install cups-client package for lpadmin
-  apt: pkg=cups-client update_cache=yes cache_valid_time=3600
+- name: install dependency packages with apt
+  apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
   become: True
+  with_items:
+    - cups-client
+    - smbclient
 
 - name: hyad printer config script
   template: src=hyad_printing.sh.j2 dest=/usr/local/sbin/hyad_printing.sh mode=0744 owner=root group=root
