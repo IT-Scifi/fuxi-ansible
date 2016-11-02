@@ -13,5 +13,5 @@
   become: True
 
 - name: Run config script
-  command: /usr/local/sbin/hyad_printing.sh creates={{ bookkeepingdir}}/{{ adprint_touch_file }}
+  command: /usr/local/sbin/hyad_printing.sh creates={{ bookkeepingdir }}/{{ adprint_touch_file }}
   become: True
