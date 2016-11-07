@@ -17,3 +17,4 @@
   roles:
   - role: networking
   - role: printing
+  - role: email

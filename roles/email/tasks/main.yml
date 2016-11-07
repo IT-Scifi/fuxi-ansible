@@ -1,0 +1,11 @@
+---
+# tasks file for email
+
+- name: install dependency packages with apt
+  apt: pkg=postfix update_cache=yes cache_valid_time=3600
+  become: True
+
+- name: postfix config file
+  copy: src=postfix_main.cf dest=/etc/postfix/main.cf mode=0644 owner=root group=root
+  become: True
+  notify: postfix reload
