@@ -18,3 +18,4 @@
   - role: networking
   - role: printing
   - role: email
+  - role: admin
