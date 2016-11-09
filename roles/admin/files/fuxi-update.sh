@@ -66,9 +66,8 @@ echo "--- apt-get clean"
 apt-get clean
 
 
-# See what would be autoremoved if we add this
-echo "--- Simulation of autoremove ---"
-apt-get -s -y autoremove
+echo "--- apt-get autoremove"
+apt-get -y autoremove
 
 echo "--- apt-get update ---"
 if ! apt-get update ; then
