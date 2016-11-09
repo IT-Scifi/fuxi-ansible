@@ -8,6 +8,14 @@
     - cups-client
     - smbclient
 
+- name: Samba workgroup config
+  ini_file: >
+    dest={{ samba_config_file }}
+    section=global
+    option=workgroup
+    value=ATKK
+  become: True
+
 - name: hyad printer config script
   template: src=hyad_printing.sh.j2 dest=/usr/local/sbin/hyad_printing.sh mode=0744 owner=root group=root
   become: True
