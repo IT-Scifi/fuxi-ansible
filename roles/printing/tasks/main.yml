@@ -8,13 +8,15 @@
     - cups-client
     - smbclient
 
-- name: Samba workgroup config
-  ini_file: >
-    dest={{ samba_config_file }}
-    section=global
-    option=workgroup
-    value=ATKK
-  become: True
+# Doesn't work.  If there is e.g. white space before worgroup variable
+# in the existing smb.conf file, ini_file module just doesn't do.
+#- name: Samba workgroup config
+#  ini_file: >
+#    dest={{ samba_config_file }}
+#    section=global
+#    option=workgroup
+#    value=ATKK
+#  become: True
 
 - name: hyad printer config script
   template: src=hyad_printing.sh.j2 dest=/usr/local/sbin/hyad_printing.sh mode=0744 owner=root group=root
