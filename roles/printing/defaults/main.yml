@@ -1,4 +1,4 @@
 ---
 # defaults file for printing
 adprint_ppd_file: /var/lib/ansible/local/roles/printing/files/smartcard-ps.ppd
-adprint_touch_file: adprintconf_000
+adprint_touch_file: adprintconf_001
