@@ -2,7 +2,7 @@
 # tasks file for admin
 
 - name: apt update script for fuxi laptop
-  copy: src=fuxi-update.sh dest=/usr/local/sbin/fuxi-laptop owner=root group=root mode=0744
+  copy: src=fuxi-update.sh dest=/usr/local/sbin/fuxi-update.sh owner=root group=root mode=0744
   become: True
 
 - name: Create crontab entry for fuxi apt update.
