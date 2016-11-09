@@ -2,4 +2,3 @@
 # handlers file for email
 - name: postfix reload
   service: name=postfix state=reloaded
-  become: True

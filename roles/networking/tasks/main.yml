@@ -7,19 +7,15 @@
     section=main
     option=monitor-connection-files
     value=true
-  become: True
   notify: restart NetworkManager
 
 # Firewall config
 
 - name: install apt packages
   apt: pkg=ufw update_cache=yes cache_valid_time=3600
-  become: True
 
 - name: allow ssh
   ufw: rule=allow port=ssh proto=tcp
-  become: True
 
 - name: enable ufw and configure the default policy
   ufw: state=enabled policy=deny
-  become: True

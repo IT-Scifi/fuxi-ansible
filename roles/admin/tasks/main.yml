@@ -3,11 +3,9 @@
 
 - name: apt update script for fuxi laptop
   copy: src=fuxi-update.sh dest=/usr/local/sbin/fuxi-update.sh owner=root group=root mode=0744
-  become: True
 
 - name: Create crontab entry for fuxi apt update.
   template: src=etc_cron.d_fuxi_update.j2 dest=/etc/cron.d/fuxi-update owner=root group=root mode=0644
-  become: True
 
 - name: Create logrotate entry for ansible-pull.log
   template: src=etc_logrotate.d_admin.j2 dest=/etc/logrotate.d/fuxi_admin owner=root group=root mode=0644

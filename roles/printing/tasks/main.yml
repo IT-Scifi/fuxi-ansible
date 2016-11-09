@@ -15,12 +15,9 @@
 #    section=global
 #    option=workgroup
 #    value=ATKK
-#  become: True
 
 - name: hyad printer config script
   template: src=hyad_printing.sh.j2 dest=/usr/local/sbin/hyad_printing.sh mode=0744 owner=root group=root
-  become: True
 
 - name: Run config script
   command: /usr/local/sbin/hyad_printing.sh creates={{ bookkeepingdir }}/{{ adprint_touch_file }}
-  become: True
