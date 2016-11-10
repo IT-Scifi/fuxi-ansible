@@ -15,7 +15,7 @@
   apt: pkg=ufw update_cache=yes cache_valid_time=3600
 
 - name: allow ssh
-  ufw: rule=allow port=ssh proto=tcp
+  ufw: rule=limit port=ssh proto=tcp
 
 - name: enable ufw and configure the default policy
-  ufw: state=enabled policy=deny
+  ufw: state=enabled policy=deny logging=off
