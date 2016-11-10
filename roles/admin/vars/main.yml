@@ -4,7 +4,7 @@
 # schedule is fed directly to cron
 # Rationale: */11 forces the launch time of the script to run around
 # the clock.  Time will tell whether it is reasonable or not.
-fuxi_update_schedule: '* */11 * * *'
+fuxi_update_schedule: '32 */11 * * *'
 
 # User to run fuxi admin scripts as from cron
 admin_cron_user: root
