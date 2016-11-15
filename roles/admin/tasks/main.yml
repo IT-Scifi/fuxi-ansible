@@ -4,6 +4,9 @@
 - name: apt update script for fuxi laptop
   copy: src=fuxi-update.sh dest=/usr/local/sbin/fuxi-update.sh owner=root group=root mode=0744
 
+- name: Remove the flashplugin which was installed by mistake in few machines
+  apt: name=flashplugin-installer state=absent purge=yes
+
 - name: Create crontab entry for fuxi apt update
   template: src=etc_cron.daily_fuxi_update.j2 dest=/etc/cron.daily/fuxi-update owner=root group=root mode=0755
 
