@@ -1,14 +1,6 @@
 ---
 # vars file for admin
 
-# schedule is fed directly to cron
-# Rationale: */11 forces the launch time of the script to run around
-# the clock.  Time will tell whether it is reasonable or not.
-fuxi_update_schedule: '32 */11 * * *'
-
-# User to run fuxi admin scripts as from cron
-admin_cron_user: root
-
 # File that ansible will use for admin logs
 admin_logfile: /var/log/fuxi-admin.log
 

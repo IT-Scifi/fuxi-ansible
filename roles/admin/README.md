@@ -2,13 +2,14 @@ Role Name
 =========
 
 admin role is for general administration stuff, like running the apt
-updates etc.  Currently only apt update is implemented.
+updates etc.  Currently only apt update is implemented.  Cron thingies
+should be under /etc/cron.{hourly,daily,weekly,monthly} and not under
+/etc/cron.d, because anacron is used in laptops.
 
 
 Role Variables
 --------------
 
-fuxi_update_schedule: cron timing for fuxi-update.sh script
 admin_cron_user: The user for cron jobs.
 admin_logfile: The log file for admin stuff.
 
