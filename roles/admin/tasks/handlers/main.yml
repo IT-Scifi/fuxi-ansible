@@ -1,0 +1,4 @@
+---
+# handlers file for networking
+- name: restart anacron
+  service: name=anacron state=restarted
