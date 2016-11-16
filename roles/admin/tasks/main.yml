@@ -1,6 +1,9 @@
 ---
 # tasks file for admin
 
+- name: anacron systemd config file
+  copy: src=anacron.service dest=/lib/systemd/system/anacron.service owner=root group=root mode=0644
+
 - name: apt update script for fuxi laptop
   copy: src=fuxi-update.sh dest=/usr/local/sbin/fuxi-update.sh owner=root group=root mode=0744
 
