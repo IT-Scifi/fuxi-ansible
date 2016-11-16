@@ -3,8 +3,13 @@
 
 - name: anacron systemd config file
   copy: src=anacron.service dest=/lib/systemd/system/anacron.service owner=root group=root mode=0644
+  register: anacron_changed
   notify: restart anacron
-  
+
+- name: daemon-reload anacron
+  command: /bin/systemctl daemon-reload
+  when: anacron_changed is defined
+
 - name: apt update script for fuxi laptop
   copy: src=fuxi-update.sh dest=/usr/local/sbin/fuxi-update.sh owner=root group=root mode=0744
 
