@@ -13,6 +13,12 @@
 - name: apt update script for fuxi laptop
   copy: src=fuxi-update.sh dest=/usr/local/sbin/fuxi-update.sh owner=root group=root mode=0744
 
+- name: cubbli-admin script
+  copy: src=cubbli-admin.sh dest=/usr/local/sbin/cubbli-admin.sh owner=root group=root mode=0744
+
+- name: cubbli-install script
+  copy: src=cubbli-install.sh dest=/usr/local/sbin/cubbli-install.sh owner=root group=root mode=0744
+
 - name: Remove the flashplugin which was installed by mistake in few machines
   apt: name=flashplugin-installer state=absent purge=yes
 

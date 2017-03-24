@@ -4,7 +4,7 @@
 set -e
 PATH={{ sys_path }}
 export PATH
-[ -x /usr/local/sbin/fuxi-update.sh ] || exit 0
+[ -x /usr/local/sbin/cubbli-admin.sh ] || exit 0
 
 # Run the update script
-/usr/local/sbin/fuxi-update.sh 2>&1 >> {{ admin_logfile }}
+/usr/local/sbin/cubbli-admin.sh 2>&1 >> {{ admin_logfile }}
