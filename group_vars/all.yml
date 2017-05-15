@@ -1,0 +1,4 @@
+---
+
+bookkeepingdir: /var/lib/ansible/bookkeeping
+sys_path: "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin"

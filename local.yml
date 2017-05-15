@@ -7,9 +7,6 @@
 - hosts: localhost
   remote_user: root
 
-  vars:
-    bookkeepingdir: /var/lib/ansible/bookkeeping
-    sys_path: "/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin"
   pre_tasks:
   - name: Creating the bookkeeping dir
     file: path={{ bookkeepingdir }} state=directory owner=root group=root mode=0755
