@@ -22,6 +22,9 @@
 
   vars:
 
+    # System PATH
+    sys_path: /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin
+            
     # schedule is fed directly to cron
     schedule: '12 */2 * * *'
 
