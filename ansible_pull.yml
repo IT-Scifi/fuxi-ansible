@@ -39,7 +39,7 @@
 
     # Repository to check out
     # repo must contain a local.yml file at top level
-    repo_url: https://github.com/Scifi-IT/fuxi-ansible
+    repo_url: https://github.com/metsa/fuxi-ansible
 
   tasks:
 
